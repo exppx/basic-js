@@ -6,26 +6,50 @@ const { NotImplementedError } = require('../lib');
  *
  */
 const chainMaker = {
+  chain: '',
+  links: [''],
+
   getLength() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+    return this.links.length - 1;
   },
-  addLink(/* value */) {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  addLink (value) {
+    this.links.push(value);
+    this.buildChain();
+    return this;
   },
-  removeLink(/* position */) {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  removeLink (position) {
+    if (!Number.isInteger(position) || position < 1 || position >= this.links.length) {
+      this.chain ='';
+      this.links = [''];
+      throw new Error('You can\'t remove incorrect link!');
+    }
+
+    this.links.splice(position, 1);
+    this.buildChain();
+    return this;
   },
-  reverseChain() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  reverseChain () {
+    this.links = this.links.reverse();
+    this.links.unshift('');
+    this.links.pop();
+    this.buildChain();
+    return this;
   },
-  finishChain() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  finishChain () {
+    if (this.chain.slice(-2) === '~~') this.chain = this.chain.slice(0, -2);
+    const res = this.chain;
+    this.chain ='';
+    this.links = [''];
+    return res;
   },
+  buildChain () {
+    let ch = '';
+    for (let i = 1; i < this.links.length; i++) {
+      ch = `${ch}( ${this.links[i]} )~~`;
+    }
+    this.chain = ch;
+    this.chain = this.chain.slice(0, -2);
+  }
 };
 
 module.exports = {
